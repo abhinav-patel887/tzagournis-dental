@@ -113,22 +113,27 @@ export function Footer() {
             <p className="text-sm text-background/60">
               © 2025 Tzagournis Dental Group. All rights reserved.
             </p>
-            <div className="flex items-center gap-6 text-sm">
-              <Link href="#" className="text-background/60 hover:text-background transition-colors">
-                Privacy Policy
-              </Link>
-              <span className="text-background/40">|</span>
-              <span className="text-background/60">
-                Built by{" "}
-                <Link 
-                  href="https://orbitly.ai" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:text-background transition-colors"
-                >
-                  Orbitly.ai
+            <div className="flex flex-col items-center sm:items-end gap-2">
+              <div className="flex items-center gap-6 text-sm">
+                <Link href="#" className="text-background/60 hover:text-background transition-colors">
+                  Privacy Policy
                 </Link>
-              </span>
+                <span className="text-background/40">|</span>
+                <span className="text-background/60">
+                  Built by{" "}
+                  <Link 
+                    href="https://orbitly.ai" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-background transition-colors"
+                  >
+                    Orbitly.ai
+                  </Link>
+                </span>
+              </div>
+              <p className="text-xs text-background/40">
+                AI Web Services and Automation Agency
+              </p>
             </div>
           </div>
         </div>

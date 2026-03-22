@@ -3,7 +3,7 @@
 import { useRef } from "react"
 import {
   Stethoscope,
-  CircleDot,
+  Zap,
   Users,
   Sparkles,
   Baby,
@@ -29,7 +29,7 @@ const serviceCategories = [
     ],
   },
   {
-    icon: CircleDot,
+    icon: Zap,
     title: "I Have a Cavity or Broken Tooth",
     services: [
       "Dental Crowns",

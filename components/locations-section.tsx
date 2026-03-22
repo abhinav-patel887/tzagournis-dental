@@ -4,9 +4,11 @@ import Link from "next/link"
 import { MapPin, Phone, Clock, Navigation } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import type { LocationId } from "@/types/booking"
 
 const locations = [
   {
+    id: "westerville" as LocationId,
     name: "Westerville Location",
     address: "385 County Line Rd W Suite 100",
     city: "Westerville, OH 43082",
@@ -21,6 +23,7 @@ const locations = [
     mapUrl: "https://maps.google.com/?q=385+County+Line+Rd+W+Suite+100+Westerville+OH",
   },
   {
+    id: "upperarlington" as LocationId,
     name: "Upper Arlington Location",
     address: "5025 Arlington Centre Blvd #220",
     city: "Upper Arlington, OH",
@@ -36,11 +39,14 @@ const locations = [
   },
 ]
 
-export function LocationsSection() {
+interface LocationsSectionProps {
+  onBook: (location: LocationId | null) => void
+}
+
+export function LocationsSection({ onBook }: LocationsSectionProps) {
   return (
     <section id="locations" className="py-20 lg:py-28 bg-background">
       <div className="container mx-auto px-4 lg:px-8">
-        {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-4 text-balance">
             Two Convenient Columbus Locations
@@ -50,11 +56,9 @@ export function LocationsSection() {
           </p>
         </div>
 
-        {/* Locations Grid */}
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {locations.map((location, index) => (
             <Card key={index} className="overflow-hidden border-border/50 shadow-lg">
-              {/* Map Preview */}
               <div className="h-48 bg-muted relative">
                 <iframe
                   src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(location.address + ' ' + location.city)}`}
@@ -75,7 +79,6 @@ export function LocationsSection() {
                 </h3>
                 
                 <div className="space-y-4">
-                  {/* Address */}
                   <div className="flex items-start gap-3">
                     <MapPin className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <div>
@@ -84,7 +87,6 @@ export function LocationsSection() {
                     </div>
                   </div>
                   
-                  {/* Phone */}
                   <div className="flex items-center gap-3">
                     <Phone className="h-5 w-5 text-primary flex-shrink-0" />
                     <a 
@@ -95,7 +97,6 @@ export function LocationsSection() {
                     </a>
                   </div>
                   
-                  {/* Hours */}
                   <div className="flex items-start gap-3">
                     <Clock className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <div className="space-y-1">
@@ -112,7 +113,6 @@ export function LocationsSection() {
                   </div>
                 </div>
                 
-                {/* Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <Button asChild variant="outline" className="flex-1">
                     <Link href={location.mapUrl} target="_blank" rel="noopener noreferrer">
@@ -120,10 +120,8 @@ export function LocationsSection() {
                       Get Directions
                     </Link>
                   </Button>
-                  <Button asChild className="flex-1">
-                    <Link href={`tel:${location.phone.replace(/\D/g, '')}`}>
-                      Book Appointment
-                    </Link>
+                  <Button className="flex-1" onClick={() => onBook(location.id)}>
+                    Book Appointment
                   </Button>
                 </div>
               </CardContent>

@@ -1,9 +1,9 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
 import { Star, Shield, Clock, CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import type { LocationId } from "@/types/booking"
 
 const trustIndicators = [
   { icon: Star, label: "430+ Reviews", filled: true },
@@ -12,7 +12,11 @@ const trustIndicators = [
   { icon: CreditCard, label: "Accepting Insurance" },
 ]
 
-export function HeroSection() {
+interface HeroSectionProps {
+  onBook: (location: LocationId | null) => void
+}
+
+export function HeroSection({ onBook }: HeroSectionProps) {
   return (
     <section className="relative overflow-hidden bg-background">
       <div className="container mx-auto px-4 lg:px-8">
@@ -34,11 +38,11 @@ export function HeroSection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="text-base px-8">
-                <Link href="#locations">Book at Westerville</Link>
+              <Button size="lg" className="text-base px-8" onClick={() => onBook("westerville")}>
+                Book at Westerville
               </Button>
-              <Button asChild variant="outline" size="lg" className="text-base px-8">
-                <Link href="#locations">Book at Upper Arlington</Link>
+              <Button variant="outline" size="lg" className="text-base px-8" onClick={() => onBook("upperarlington")}>
+                Book at Upper Arlington
               </Button>
             </div>
 

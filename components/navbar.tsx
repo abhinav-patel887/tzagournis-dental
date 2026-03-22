@@ -4,6 +4,11 @@ import { useState } from "react"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import type { LocationId } from "@/types/booking"
+
+interface NavbarProps {
+  onBook?: (location: LocationId | null) => void
+}
 
 const navLinks = [
   { href: "#services", label: "Services" },
@@ -12,14 +17,18 @@ const navLinks = [
   { href: "#reviews", label: "Reviews" },
 ]
 
-export function Navbar() {
+export function Navbar({ onBook }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false)
+
+  const handleBookClick = () => {
+    setIsOpen(false)
+    if (onBook) onBook(null)
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <nav className="container mx-auto px-4 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
@@ -31,7 +40,6 @@ export function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <Link
@@ -44,13 +52,10 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* CTA Button */}
           <div className="flex items-center gap-4">
-            <Button asChild className="hidden sm:inline-flex">
-              <Link href="#locations">Book Appointment</Link>
+            <Button className="hidden sm:inline-flex" onClick={handleBookClick}>
+              Book Appointment
             </Button>
-            
-            {/* Mobile Menu Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden p-2 hover:bg-accent rounded-md transition-colors"
@@ -61,7 +66,6 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <div className="flex flex-col gap-4">
@@ -75,8 +79,8 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <Button asChild className="sm:hidden w-full">
-                <Link href="#locations">Book Appointment</Link>
+              <Button className="sm:hidden w-full" onClick={handleBookClick}>
+                Book Appointment
               </Button>
             </div>
           </div>

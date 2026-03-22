@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { ChevronDown, ChevronUp, Award, GraduationCap } from "lucide-react"
+import { ChevronDown, ChevronUp, Award, GraduationCap, ArrowLeft } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -40,7 +40,15 @@ const legacyDoctor = {
 
 export function DoctorsSection() {
   const [isExpanded, setIsExpanded] = useState(false)
-  const [expandedDoctor, setExpandedDoctor] = useState<number | null>(null)
+  const [selectedDoctor, setSelectedDoctor] = useState<number | null>(null)
+
+  const handleKnowMore = (index: number) => {
+    setSelectedDoctor(index)
+  }
+
+  const handleBack = () => {
+    setSelectedDoctor(null)
+  }
 
   return (
     <section id="about" className="py-20 lg:py-28 bg-muted/30">
@@ -74,85 +82,159 @@ export function DoctorsSection() {
             isExpanded ? "max-h-[3000px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          {/* Current Doctors Grid */}
-          <div className="grid md:grid-cols-3 gap-8 mt-12 mb-12">
-            {doctors.map((doctor, index) => (
-              <Card 
-                key={index} 
-                className="overflow-hidden border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-                onClick={() => setExpandedDoctor(expandedDoctor === index ? null : index)}
-              >
-                <div className="relative h-80 overflow-hidden">
-                  <Image
-                    src={doctor.image}
-                    alt={doctor.name}
-                    fill
-                    className="object-cover object-top hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <CardContent className="p-6 space-y-3">
-                  <div>
-                    <h3 className="text-xl font-bold text-foreground">{doctor.name}</h3>
-                    <p className="text-primary font-medium">{doctor.role}</p>
+          {/* Selected Doctor Full View */}
+          {selectedDoctor !== null && (
+            <div className="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="bg-background border border-border/50 rounded-2xl overflow-hidden shadow-2xl max-w-4xl mx-auto">
+                <div className="grid md:grid-cols-2 gap-0">
+                  {/* Image - Fill completely */}
+                  <div className="relative h-96 md:h-full overflow-hidden bg-muted">
+                    <Image
+                      src={doctors[selectedDoctor].image}
+                      alt={doctors[selectedDoctor].name}
+                      fill
+                      className="object-cover object-center"
+                    />
                   </div>
                   
-                  {/* Expandable bio */}
-                  <div 
-                    className={`transition-all duration-300 overflow-hidden ${
-                      expandedDoctor === index ? "max-h-96" : "max-h-0"
-                    }`}
+                  {/* Content */}
+                  <div className="p-8 md:p-12 flex flex-col justify-between space-y-6">
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-3xl font-bold text-foreground mb-2">
+                          {doctors[selectedDoctor].name}
+                        </h3>
+                        <p className="text-lg text-primary font-semibold">
+                          {doctors[selectedDoctor].role}
+                        </p>
+                      </div>
+                      
+                      <p className="text-muted-foreground text-base leading-relaxed">
+                        {doctors[selectedDoctor].bio}
+                      </p>
+                      
+                      <div className="space-y-3">
+                        <p className="font-semibold text-foreground text-sm">Credentials & Certifications:</p>
+                        {doctors[selectedDoctor].credentials.map((credential, i) => (
+                          <div key={i} className="flex items-start gap-3 text-muted-foreground">
+                            {i === 0 ? (
+                              <GraduationCap className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                            ) : (
+                              <Award className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                            )}
+                            <span className="text-sm">{credential}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Show Less button at bottom */}
+                    <button
+                      onClick={handleBack}
+                      className="flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all self-start"
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                      Show Less
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Current Doctors Grid */}
+          {selectedDoctor === null && (
+            <>
+              <div className="grid md:grid-cols-3 gap-6 mt-12 mb-12 justify-items-center">
+                {doctors.map((doctor, index) => (
+                  <Card 
+                    key={index} 
+                    className="overflow-hidden border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group hover:scale-105 origin-top w-full max-w-xs"
                   >
-                    <p className="text-muted-foreground text-sm mb-4 pt-3">
-                      {doctor.bio}
-                    </p>
-                    <div className="space-y-2">
-                      {doctor.credentials.map((credential, i) => (
-                        <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                          {i === 0 ? (
-                            <GraduationCap className="h-4 w-4 text-primary flex-shrink-0" />
-                          ) : (
-                            <Award className="h-4 w-4 text-primary flex-shrink-0" />
-                          )}
-                          <span>{credential}</span>
+                  <div className="relative aspect-[3/4] overflow-hidden bg-muted max-h-64">
+                      <Image
+                        src={doctor.image}
+                        alt={doctor.name}
+                        fill
+                        className="object-contain object-center group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                    <CardContent className="p-4 space-y-2">
+                      <div>
+                        <h3 className="text-base font-bold text-foreground">{doctor.name}</h3>
+                        <p className="text-xs text-primary font-medium">{doctor.role}</p>
+                      </div>
+                      
+                      <button 
+                        onClick={() => handleKnowMore(index)}
+                        className="text-xs text-primary font-medium hover:underline flex items-center gap-1 transition-all hover:gap-2"
+                      >
+                        Know More
+                        <ChevronDown className="h-3 w-3" />
+                      </button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Legacy Doctor */}
+              <div className="mt-20 pt-12 border-t border-border/50">
+                <div className="text-center mb-12">
+                  <span className="text-sm font-bold text-primary uppercase tracking-widest">🌟 Legacy 🌟</span>
+                </div>
+                <div className="max-w-5xl mx-auto">
+                  <div className="bg-background border border-border/50 rounded-2xl overflow-hidden shadow-lg">
+                    <div className="grid md:grid-cols-3 gap-0">
+                      {/* Image - 1 column */}
+                      <div className="relative aspect-[3/4] overflow-hidden bg-muted">
+                        <Image
+                          src={legacyDoctor.image}
+                          alt={legacyDoctor.name}
+                          fill
+                          className="object-cover object-top"
+                        />
+                      </div>
+                      
+                      {/* Content - 2 columns */}
+                      <div className="md:col-span-2 p-10 flex flex-col justify-between space-y-6">
+                        <div className="space-y-4">
+                          <div>
+                            <span className="text-xs font-bold text-primary uppercase tracking-wider">Legacy</span>
+                            <h3 className="text-4xl font-bold text-foreground mt-3">
+                              {legacyDoctor.name}
+                            </h3>
+                            <p className="text-lg text-muted-foreground font-medium mt-2">
+                              Honored for Lifelong Service
+                            </p>
+                          </div>
+                          
+                          <p className="text-muted-foreground leading-relaxed text-base">
+                            {legacyDoctor.bio}
+                          </p>
+                          
+                          <div className="space-y-3 pt-2">
+                            {legacyDoctor.credentials.map((credential, i) => (
+                              <div key={i} className="flex items-center gap-3 text-sm text-muted-foreground">
+                                <Award className="h-5 w-5 text-primary flex-shrink-0" />
+                                <span>{credential}</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      ))}
+                        
+                        {/* Quote section */}
+                        <div className="border-t border-border/30 pt-6">
+                          <p className="italic text-muted-foreground text-base">
+                            "A smile is the most beautiful curve on a human face, and we're honored to help create yours."
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  
-                  <button className="text-sm text-primary font-medium hover:underline flex items-center gap-1">
-                    {expandedDoctor === index ? "Show Less" : "Learn More"}
-                    {expandedDoctor === index ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                  </button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Legacy Doctor */}
-          <div className="max-w-md mx-auto">
-            <div className="text-center mb-6">
-              <span className="text-sm font-medium text-primary uppercase tracking-wider">Legacy</span>
-            </div>
-            <Card className="overflow-hidden border-border/50 shadow-lg">
-              <div className="relative h-64 overflow-hidden">
-                <Image
-                  src={legacyDoctor.image}
-                  alt={legacyDoctor.name}
-                  fill
-                  className="object-cover object-top"
-                />
-              </div>
-              <CardContent className="p-6 space-y-3">
-                <div>
-                  <h3 className="text-xl font-bold text-foreground">{legacyDoctor.name}</h3>
-                  <p className="text-primary font-medium">{legacyDoctor.role}</p>
                 </div>
-                <p className="text-muted-foreground text-sm">
-                  {legacyDoctor.bio}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>
